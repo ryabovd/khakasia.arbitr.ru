@@ -69,15 +69,17 @@ def date_today():
     today = datetime.date.today()
     return today
 
+def main():
+    html = get_html(URL, params='')
+    soup = get_soup(html.text)
+    content = get_content_news(soup)
+    news = get_news_from_content(content, news_list_dict)
+    save_news(news, CSV)
+    text = text_for_send(news)
+    send_notification(text)
 
-html = get_html(URL, params='')
-soup = get_soup(html.text)
-content = get_content_news(soup)
-news = get_news_from_content(content, news_list_dict)
-save_news(news, CSV)
-text = text_for_send(news)
-send_notification(text)
-
+if __name__ == "__main__":
+    main()
 
 
 # Переписать скрипт на __main__
