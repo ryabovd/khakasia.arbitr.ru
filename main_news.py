@@ -1,12 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
+from send_email import send_notification
+import json
+import datetime
 
 
 CSV = 'news_khakasia.arbitr.ru.csv'
 news_list_dict = []
-# URL страницы поиска
-#URL = 'https://khakasia.arbitr.ru'
 HOST = 'https://khakasia.arbitr.ru'
 URL = 'https://khakasia.arbitr.ru/?theme=courts_cecutient'
 
@@ -57,46 +58,29 @@ def save_news(news, CSV):
         for news_dict in news:
             writer.writerow( [news_dict['news_date'], news_dict['news_title'], news_dict['news_link'], news_dict['news_text']] )
 
+def text_for_send(news):
+    text = ''
+    for news_dict in news:
+        text += news_dict['news_date'] + '\n' + news_dict['news_title'] + '\n' + news_dict['news_link'] + '\n' + news_dict['news_text'] + '\n\n'
+    return text
+
+def date_today():
+    '''Func that returned today date'''
+    today = datetime.date.today()
+    return today
+
+
 html = get_html(URL, params='')
 soup = get_soup(html.text)
 content = get_content_news(soup)
 news = get_news_from_content(content, news_list_dict)
-print(news)
 save_news(news, CSV)
+text = text_for_send(news)
+send_notification(text)
 
 
-'''
-def parser():
-    html = get_html(URL)
-    if html.status_code == 200:
-        print('OK')
-        news = get_content(html.text)
-        save_news(news, CSV)
-        return news
-    else:
-        print('Error')
 
-def save_news(news, CSV):
-    with open(CSV, 'w', encoding='utf-8')  as csvfile:
-        writer = csv.writer(csvfile, delimiter=';')
-        writer.writerow(['Дата', 'Заголовок', 'Ссылка'])
-        for news_dict in news:
-            writer.writerow( [news_dict['news_date'], news_dict['news_title'], news_dict['news_link']] )
-
-def get_news_text(url):
-    html = get_html('https://khakasia.arbitr.ru/node/16040', params='')
-    tex = get_content(html.text)
-    text = 'Текст новости'
-    soup = BeautifulSoup(tex, 'html.parser')
-    item = soup.find('div', class_ = "b-content-body-text").find_all('p').get_text()
-    print(text)
-    return text
-    
-
-
-#html = get_html(URL)
-#print(html)
-#print(get_content(html.text))
-#save_news(parser(), CSV)
-print(parser())
-'''
+# Переписать скрипт на __main__
+# Написать функцию проверки даты последней новости, полученной при предыдущей проверке, и отбирающей только новые новости
+# Написать функцию отправки новостей по электронной почте
+# Написать функцию проверки по расписанию ???
