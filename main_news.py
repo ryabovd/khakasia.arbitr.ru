@@ -22,7 +22,6 @@ def get_last_date():
         settings = json.load(file)
         last_date = settings["last_date"]
     return last_date
-        
 
 def get_html(url, params=''):
     request_url = requests.get(url, headers=HEADERS, params=params, verify=False)
@@ -36,16 +35,18 @@ def get_content_news(soup):
     items = soup.find_all('div', class_ = "b-news-content-wrapper")
     return items
 
-def get_news_from_content(items, news_list_dict):
+def get_news_from_content(items, news_list_dict, last_date):
     for item in items:
-        news_list_dict.append(
-            {
-                'news_date': item.find('h6', class_="b-news-date").get_text().strip(),
-                'news_title': item.find('h2', class_="b-news-title").get_text().strip(),
-                'news_link': HOST + item.find('h2', class_="b-news-title").find('a').get('href'),
-                'news_text': get_text_news(HOST + item.find('h2', class_="b-news-title").find('a').get('href'))
-            }
-        )
+        date_new = item.find('h6', class_="b-news-date").get_text().strip()
+        if convert_date(last_date) < convert_date(date_new):
+            news_list_dict.append(
+                {
+                    'news_date': item.find('h6', class_="b-news-date").get_text().strip(),
+                    'news_title': item.find('h2', class_="b-news-title").get_text().strip(),
+                    'news_link': HOST + item.find('h2', class_="b-news-title").find('a').get('href'),
+                    'news_text': get_text_news(HOST + item.find('h2', class_="b-news-title").find('a').get('href'))
+                }
+            )
     return news_list_dict
 
 def get_text_news(url):
@@ -82,18 +83,40 @@ def write_last_data_json(new_last_date):
         data['last_date'] = new_last_date
         json.dump(data, file)
 
+def get_current_date(soup):
+    current_date = soup.find('h6', class_="b-news-date").get_text().strip()
+    return current_date
+
+def convert_date(date):
+    date_list = date.split('.')
+    year, month, day = int(date_list[2]), int(date_list[1]), int(date_list[0])
+    return datetime.date(year, month, day)
+
+def dates_diff(last_date, current_date):
+    return convert_date(current_date) > convert_date(last_date)
 
 def main():
     last_date = get_last_date()
     html = get_html(URL, params='')
     soup = get_soup(html.text)
-    content = get_content_news(soup)
-    news = get_news_from_content(content, news_list_dict)
-    save_news(news, CSV)
-    text = text_for_send(news)
-    send_notification(text)
-    new_last_date = news[0]['news_date']
-    write_last_data_json(new_last_date)
+    current_date = get_current_date(soup)
+    if dates_diff(last_date, current_date) == True:
+        content = get_content_news(soup)
+        news = get_news_from_content(content, news_list_dict, last_date)
+
+
+    #last_date = get_last_date()
+    #html = get_html(URL, params='')
+    #soup = get_soup(html.text)
+    #content = get_content_news(soup)
+    #news = get_news_from_content(content, news_list_dict)
+        save_news(news, CSV)
+    else:
+        print('Новостей нет')
+    #text = text_for_send(news)
+    #send_notification(text)
+    #new_last_date = news[0]['news_date']
+    #write_last_data_json(new_last_date)
 
 
 if __name__ == "__main__":
