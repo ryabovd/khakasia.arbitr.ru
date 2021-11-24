@@ -103,20 +103,14 @@ def main():
     if dates_diff(last_date, current_date) == True:
         content = get_content_news(soup)
         news = get_news_from_content(content, news_list_dict, last_date)
-
-
-    #last_date = get_last_date()
-    #html = get_html(URL, params='')
-    #soup = get_soup(html.text)
-    #content = get_content_news(soup)
-    #news = get_news_from_content(content, news_list_dict)
         save_news(news, CSV)
+        subject = "Новости арбитражного суда Республики Хакасия на"
+        text = text_for_send(news)
+        send_notification(text, subject)
+        new_last_date = news[0]['news_date']
+        write_last_data_json(new_last_date)
     else:
         print('Новостей нет')
-    #text = text_for_send(news)
-    #send_notification(text)
-    #new_last_date = news[0]['news_date']
-    #write_last_data_json(new_last_date)
 
 
 if __name__ == "__main__":
@@ -124,10 +118,10 @@ if __name__ == "__main__":
 
 
 # Исправить ошибку проверки SSL
-# Сделать функцию проверки даты прошлой первой новости
-# Написать функцию записи новой даты новостей
-# + Переписать скрипт на __main__
-# Написать функцию проверки даты последней новости, полученной при предыдущей проверке, и отбирающей только новые новости
-# + Написать функцию отправки новостей по электронной почте
+# +Сделать функцию проверки даты прошлой первой новости
+# +Написать функцию записи новой даты новостей
+# +Переписать скрипт на __main__
+# +Написать функцию проверки даты последней новости, полученной при предыдущей проверке, и отбирающей только новые новости
+# +Написать функцию отправки новостей по электронной почте
 # Написать функцию проверки по расписанию ???
-# Написать функцию для работы с аргументами строки
+# Написать функцию для работы с аргументами строки (с какой даты, выводить в консоль, отправлять по почте)
