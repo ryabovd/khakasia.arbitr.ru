@@ -6,25 +6,26 @@ import json
 import datetime
 
 
-CSV = 'news_khakasia.arbitr.ru.csv'
-HOST = 'https://khakasia.arbitr.ru'
-URL = 'https://khakasia.arbitr.ru/?theme=courts_cecutient'
-HEADERS = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
-    }
-
 def main():
+    CSV = 'news_khakasia.arbitr.ru.csv'
+    HOST = 'https://khakasia.arbitr.ru'
+    URL = 'https://khakasia.arbitr.ru/?theme=courts_cecutient'
+    HEADERS = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+        }
+
     last_date = get_last_date()
-    html = get_html(URL, params='')
+    html = get_html(URL, HEADERS)
     soup = get_soup(html.text)
     current_date = get_current_date(soup)
     if dates_diff(last_date, current_date) == True:
         content = get_content_news(soup)
-        news = get_news_from_content(content, last_date)
+        news = get_news_from_content(content, last_date, HOST, HEADERS)
         save_news(news, CSV)
         subject = "Новости арбитражного суда Республики Хакасия на"
         text = text_for_send(news)
+        print('Новости получены')
         send_notification(text, subject)
         new_last_date = news[0]['news_date']
         write_last_data_json(new_last_date)
@@ -37,8 +38,8 @@ def get_last_date():
         last_date = settings["last_date"]
     return last_date
 
-def get_html(url, params=''):
-    request_url = requests.get(url, headers=HEADERS, params=params, verify=False)
+def get_html(url, HEADERS):
+    request_url = requests.get(url, HEADERS, verify=False)
     return request_url
 
 def get_soup(request_url):
@@ -61,7 +62,7 @@ def get_content_news(soup):
     items = soup.find_all('div', class_ = "b-news-content-wrapper")
     return items
 
-def get_news_from_content(items, last_date):
+def get_news_from_content(items, last_date, HOST, HEADERS):
     news_list_dict = []
     for item in items:
         date_new = item.find('h6', class_="b-news-date").get_text().strip()
@@ -71,13 +72,13 @@ def get_news_from_content(items, last_date):
                     'news_date': item.find('h6', class_="b-news-date").get_text().strip(),
                     'news_title': item.find('h2', class_="b-news-title").get_text().strip(),
                     'news_link': HOST + item.find('h2', class_="b-news-title").find('a').get('href'),
-                    'news_text': get_text_news(HOST + item.find('h2', class_="b-news-title").find('a').get('href'))
+                    'news_text': get_text_news(HOST + item.find('h2', class_="b-news-title").find('a').get('href'), HEADERS)
                 }
             )
     return news_list_dict
 
-def get_text_news(url):
-    html = get_html(url, params='')
+def get_text_news(url, HEADERS):
+    html = get_html(url, HEADERS)
     soup = get_soup(html.text)
     news_text = get_content_text_news(soup)
     return news_text

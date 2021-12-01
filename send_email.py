@@ -16,6 +16,7 @@ def send_notification(text, subject):
             sender, to_item, '{} {}'.format(subject, date_today()))
         msg += text
         mail_lib.sendmail(sender, to_item, msg.encode('utf8'))
+        print('Отправлено письмо на адрес {}'.format(to_item))
     mail_lib.quit()
 
 
