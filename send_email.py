@@ -4,7 +4,7 @@ import json
 
 
 def send_notification(text, subject):
-    email = ['ryabovd@outlook.com']
+    email = ['ryabovd@outlook.com', 'o.shaidulin@gmail.com']
     with open('settings.json', 'r', encoding='utf-8') as file:
         settings = json.load(file)
         sender = settings["sender"]
