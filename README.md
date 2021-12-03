@@ -11,13 +11,16 @@ The files should be placed in the working directory:
 send_email.py - this is the module for sending emails. 
 This module contains information about the recipients of the message in the form of a list that can be changed or enlarged;
 
-main_news_settings.json - this is the settings file of the main_news.py module that contains the date of the previous news check in the form of a dictionary 
+main_news_settings.json - this is the settings file of the main_news.py module that contains the date of the previous news check in the form of a dictionary:
 {
     "last_date": "dd.mm.yyyy",
-    "adress_list": ["name@example.com", "name@yandex.ru"]
+    "adress_list": [
+        "name@example.com", 
+        "name@yandex.ru"
+    ]
 }
 
-settings.json is the settings file of module send_email.py which contains the settings for sending emails in the form of dictionary
+settings.json is the settings file of module send_email.py which contains the settings for sending emails in the form of dictionary:
 {
     "sender" : "sender_adr@example.com", 
     "sender_password" : "sender's_password" 
