@@ -15,28 +15,32 @@ def main():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
         }
 
-    last_date = get_last_date()
+    settings = get_settings()
+    last_date = settings['last_date']
     html = get_html(URL, HEADERS)
     soup = get_soup(html.text)
     current_date = get_current_date(soup)
     if dates_diff(last_date, current_date) == True:
         content = get_content_news(soup)
         news = get_news_from_content(content, last_date, HOST, HEADERS)
-        save_news(news, CSV)
-        subject = "Новости арбитражного суда Республики Хакасия на"
-        text = text_for_send(news)
         print('Новости получены')
-        send_notification(text, subject)
+        save_news(news, CSV)
+        print('Новости сохранены')
+        text = text_for_send(news)
+        subject = 'Новости арбитражного суда Республики Хакасия на'
+        adress_list = settings['adress_list']
+        send_notification(text, subject, adress_list)
         new_last_date = news[0]['news_date']
-        write_last_data_json(new_last_date)
+        settings['last_date'] = new_last_date
+        write_new_settings_json(settings)
     else:
         print('\nНовости ОТСУТСТВУЮТ\n')
 
-def get_last_date():
+def get_settings():
     with open('main_news_settings.json', 'r', encoding='utf-8') as file:
         settings = json.load(file)
-        last_date = settings["last_date"]
-    return last_date
+        print(settings)
+    return settings
 
 def get_html(url, HEADERS):
     request_url = requests.get(url, HEADERS, verify=False)
@@ -97,7 +101,7 @@ def save_news(news, CSV):
 def text_for_send(news):
     text = ''
     for news_dict in news:
-        text += news_dict['news_date'] + '\n' + news_dict['news_title'] + '\n' + news_dict['news_link'] + '\n' + news_dict['news_text'] + '\n\n'
+        text += news_dict['news_date'] + '\n' + news_dict['news_title'] + '\n' + news_dict['news_link'] + '\n' + news_dict['news_text'] + '\n'
     return text
 
 def date_today():
@@ -105,11 +109,9 @@ def date_today():
     today = datetime.date.today()
     return today
 
-def write_last_data_json(new_last_date):
+def write_new_settings_json(settings):
     with open('main_news_settings.json', 'w', encoding='utf-8') as file:
-        data = {}
-        data['last_date'] = new_last_date
-        json.dump(data, file)
+        json.dump(settings, file)
 
 
 if __name__ == "__main__":

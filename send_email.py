@@ -3,8 +3,8 @@ import smtplib
 import json
 
 
-def send_notification(text, subject):
-    email = ['ryabovd@outlook.com', 'o.shaidulin@gmail.com']
+def send_notification(text, subject, adress_list):
+    email = adress_list
     with open('settings.json', 'r', encoding='utf-8') as file:
         settings = json.load(file)
         sender = settings["sender"]
