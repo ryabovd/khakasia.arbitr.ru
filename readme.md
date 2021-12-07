@@ -40,7 +40,10 @@ address of news recipient (if it is missing in send_email.py module) and others.
 
 
 
+<<<<<<< HEAD:README.md
 
+=======
+>>>>>>> d8f4f605d4f0f753e84df175cc9811f29d2c6ad1:readme.md
 readme v 1.1
 
 main_news.py
