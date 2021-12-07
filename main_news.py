@@ -4,6 +4,8 @@ import csv
 from send_email import send_notification
 import json
 import datetime
+import sys
+import re
 
 
 def main():
@@ -16,7 +18,11 @@ def main():
         }
 
     settings = get_settings()
-    last_date = settings['last_date']
+    if len(sys.argv) > 1:
+        last_date = get_last_date(sys.argv[1])
+    else:
+        last_date = settings['last_date']
+    print('\nПолучаем новости с {}'.format(last_date))
     html = get_html(URL, HEADERS)
     soup = get_soup(html.text)
     current_date = get_current_date(soup)
@@ -39,8 +45,12 @@ def main():
 def get_settings():
     with open('main_news_settings.json', 'r', encoding='utf-8') as file:
         settings = json.load(file)
-        print(settings)
     return settings
+
+def get_last_date(date_from_argv):
+    pattern_date = r'^(\d\d.\d\d.\d\d\d\d)$'
+    last_date = re.findall(pattern_date, date_from_argv)
+    return last_date[0]
 
 def get_html(url, HEADERS):
     request_url = requests.get(url, HEADERS, verify=False)
