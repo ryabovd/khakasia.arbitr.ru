@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import certifi
 import csv
 from send_email import send_notification
 import json
@@ -16,7 +17,7 @@ def main():
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
         }
-
+    
     settings = get_settings()
     if len(sys.argv) > 1:
         last_date = get_last_date(sys.argv[1])
@@ -53,7 +54,10 @@ def get_last_date(date_from_argv):
     return last_date[0]
 
 def get_html(url, HEADERS):
+    #s = requests.Session()
+    #s.verify = certifi.where()
     request_url = requests.get(url, HEADERS, verify=False)
+    #print(request_url)
     return request_url
 
 def get_soup(request_url):
@@ -128,6 +132,7 @@ if __name__ == "__main__":
     main()
 
 
+# Написать вывод в консоль время выполнения скрипта
 # Исправить ошибку проверки SSL
 # Написать функцию для работы с аргументами строки (с какой даты, выводить в консоль, отправлять по почте)
 # +Исправить функцию записи json, чтобы записывать красивые файлы
