@@ -11,8 +11,8 @@ import re
 
 def main():
     CSV = 'news_khakasia.arbitr.ru.csv'
-    HOST = 'https://khakasia.arbitr.ru'
-    URL = 'https://khakasia.arbitr.ru/?theme=courts_cecutient'
+    #HOST = 'https://khakasia.arbitr.ru'
+    URLS = ['https://khakasia.arbitr.ru/?theme=courts_cecutient','https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 'https://tyva.arbitr.ru/?theme=courts_cecutient']
     HEADERS = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
@@ -23,25 +23,34 @@ def main():
         last_date = get_last_date(sys.argv[1])
     else:
         last_date = settings['last_date']
-    print('\nПолучаем новости с {}'.format(last_date))
-    html = get_html(URL, HEADERS)
-    soup = get_soup(html.text)
-    current_date = get_current_date(soup)
-    if dates_diff(last_date, current_date) == True:
-        content = get_content_news(soup)
-        news = get_news_from_content(content, last_date, HOST, HEADERS)
-        print('Новости получены')
-        save_news(news, CSV)
-        print('Новости сохранены')
-        text = text_for_send(news)
-        subject = 'Новости арбитражного суда Республики Хакасия на'
-        adress_list = settings['adress_list']
-        send_notification(text, subject, adress_list)
-        new_last_date = news[0]['news_date']
-        settings['last_date'] = new_last_date
-        write_new_settings_json(settings)
-    else:
-        print('\nНовости ОТСУТСТВУЮТ\n')
+    
+    for URL in URLS:
+        html = get_html(URL, HEADERS)
+        soup = get_soup(html.text)
+        court = get_court(soup)
+        print(court)
+        print('\nПолучаем новости с {}'.format(last_date))
+        print()
+        current_date = get_current_date(soup)
+        if dates_diff(last_date, current_date) == True:
+            content = get_content_news(soup)
+            #print('URL', URL)
+            host_match = re.match(r"(.+\/)", URL)
+            #print (host_match.group(0))
+            HOST = host_match.group(0)
+            news = get_news_from_content(content, last_date, HOST, HEADERS)
+            print('Новости получены')
+            save_news(news, CSV)
+            print('Новости сохранены')
+            text = text_for_send(news)
+            subject = court + ' | Новости на'
+            adress_list = settings['adress_list']
+            send_notification(text, subject, adress_list)
+            new_last_date = news[0]['news_date']
+            settings['last_date'] = new_last_date
+            write_new_settings_json(settings)
+        else:
+            print('\nНовости ОТСУТСТВУЮТ\n')
 
 def get_settings():
     with open('main_news_settings.json', 'r', encoding='utf-8') as file:
@@ -63,6 +72,15 @@ def get_html(url, HEADERS):
 def get_soup(request_url):
     soup = BeautifulSoup(request_url, 'html.parser')
     return soup
+
+def get_court(soup):
+    title = soup.find('title').get_text().strip()
+    print(title)
+    court_match = re.search(r"(А[ a-яА-Я]+)$", title)
+    #print(court_match)
+    #print (host_match.group(0))
+    court = court_match.group(0)
+    return court
 
 def get_current_date(soup):
     current_date = soup.find('h6', class_="b-news-date").get_text().strip()
