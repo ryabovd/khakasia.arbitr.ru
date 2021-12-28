@@ -11,8 +11,11 @@ import re
 
 def main():
     CSV = 'news_khakasia.arbitr.ru.csv'
-    #HOST = 'https://khakasia.arbitr.ru'
-    URLS = ['https://khakasia.arbitr.ru/?theme=courts_cecutient','https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 'https://tyva.arbitr.ru/?theme=courts_cecutient']
+    URLS = [
+        'https://khakasia.arbitr.ru/?theme=courts_cecutient',
+        'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
+        'https://tyva.arbitr.ru/?theme=courts_cecutient'
+        ]
     HEADERS = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
@@ -34,9 +37,7 @@ def main():
         current_date = get_current_date(soup)
         if dates_diff(last_date, current_date) == True:
             content = get_content_news(soup)
-            #print('URL', URL)
             host_match = re.match(r"(.+\/)", URL)
-            #print (host_match.group(0))
             HOST = host_match.group(0)
             news = get_news_from_content(content, last_date, HOST, HEADERS)
             print('Новости получены')
@@ -77,8 +78,6 @@ def get_court(soup):
     title = soup.find('title').get_text().strip()
     print(title)
     court_match = re.search(r"(А[ a-яА-Я]+)$", title)
-    #print(court_match)
-    #print (host_match.group(0))
     court = court_match.group(0)
     return court
 
