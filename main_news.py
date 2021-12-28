@@ -119,7 +119,7 @@ def get_text_news(url, HEADERS):
     return news_text
 
 def get_content_text_news(soup):
-    items = soup.find('div', class_ = 'b-content-body-text').get_text()
+    items = soup.find('div', class_ = 'b-content-body-text').get_text() + '\n'
     return items
 
 def save_news(news, CSV):
