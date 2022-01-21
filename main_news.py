@@ -31,16 +31,15 @@ def main():
         html = get_html(URL, HEADERS)
         soup = get_soup(html.text)
         court = get_court(soup)
-        print(court)
-        print('\nПолучаем новости с {}'.format(last_date))
-        print()
+        print('\n' + court)
+        print('\nПолучаем новости с {}\n'.format(last_date))
         current_date = get_current_date(soup)
         if dates_diff(last_date, current_date) == True:
             content = get_content_news(soup)
             host_match = re.match(r"(.+\/)", URL)
             HOST = host_match.group(0)
             news = get_news_from_content(content, last_date, HOST, HEADERS)
-            print('Новости получены')
+            print('\nНовости получены')
             save_news(news, CSV)
             print('Новости сохранены')
             text = text_for_send(news)
@@ -51,7 +50,7 @@ def main():
             settings['last_date'] = new_last_date
             write_new_settings_json(settings)
         else:
-            print('\nНовости ОТСУТСТВУЮТ\n')
+            print('Новости ОТСУТСТВУЮТ\n')
 
 def get_settings():
     with open('main_news_settings.json', 'r', encoding='utf-8') as file:
@@ -76,7 +75,6 @@ def get_soup(request_url):
 
 def get_court(soup):
     title = soup.find('title').get_text().strip()
-    print(title)
     court_match = re.search(r"(А[ a-яА-Я]+)$", title)
     court = court_match.group(0)
     return court
