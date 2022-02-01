@@ -10,7 +10,7 @@ import re
 
 
 def main():
-    CSV = 'news_khakasia.arbitr.ru.csv'
+    CSV = 'news_arbitr.ru.csv'
     URLS = [
         'https://khakasia.arbitr.ru/?theme=courts_cecutient',
         'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
