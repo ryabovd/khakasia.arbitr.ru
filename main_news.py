@@ -51,6 +51,7 @@ def main():
             write_new_settings_json(settings)
         else:
             print('Новости ОТСУТСТВУЮТ\n')
+    print('Работа скрипта ЗАВЕРШЕНА\n')
 
 def get_settings():
     with open('main_news_settings.json', 'r', encoding='utf-8') as file:
