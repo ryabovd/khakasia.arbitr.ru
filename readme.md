@@ -1,6 +1,6 @@
 # arbitr.ru
 
-readme v 1.3
+readme v 1.4
 
 main_news.py
 This script collects news headlines from the website of the Arbitration Court of the Republic of Khakassia, Arbitration Court of the Republic of Tyva,
@@ -14,10 +14,10 @@ This module contains information about the recipients of the message in the form
 main_news_settings.json - this is the settings file of the main_news.py module that contains the date of the previous news check in the form of a dictionary:
 {
     "last_date": "dd.mm.yyyy",
-    "adress_list": [
-        "name@example.com", 
-        "name@yandex.ru"
-    ]
+    "adress_list": {
+        "name_0": "name@example.com",
+        "name_1": "name@yandex.ru"
+    }
 }
 
 settings.json is the settings file of module send_email.py which contains the settings for sending emails in the form of dictionary:
