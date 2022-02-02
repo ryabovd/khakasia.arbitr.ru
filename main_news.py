@@ -44,7 +44,7 @@ def main():
             print('Новости сохранены')
             text = text_for_send(news)
             subject = court + ' | Новости на'
-            adress_list = settings['adress_list']
+            adress_list = get_adress_list(settings)
             send_notification(text, subject, adress_list)
             new_last_date = news[0]['news_date']
             settings['last_date'] = new_last_date
@@ -66,7 +66,6 @@ def get_html(url, HEADERS):
     #s = requests.Session()
     #s.verify = certifi.where()
     request_url = requests.get(url, HEADERS, verify=False)
-    #print(request_url)
     return request_url
 
 def get_soup(request_url):
@@ -132,6 +131,13 @@ def text_for_send(news):
     for news_dict in news:
         text += news_dict['news_date'] + '\n' + news_dict['news_title'] + '\n' + news_dict['news_link'] + '\n' + news_dict['news_text'] + '\n'
     return text
+
+def get_adress_list(settings):
+    adresses = settings['adress_list'].items()
+    adress_list = []
+    for k, v in adresses:
+        adress_list.append(v)
+    return adress_list
 
 def date_today():
     '''Func that returned today date'''
