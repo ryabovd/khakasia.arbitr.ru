@@ -7,6 +7,7 @@ import json
 import datetime
 import sys
 import re
+import time
 
 
 def main():
@@ -151,7 +152,10 @@ def write_new_settings_json(settings):
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     main()
+    seconds = time.time() - start_time
+    print('Время работы программы:', time.strftime("%H:%M:%S",time.gmtime(seconds)))
 
 
 # Написать вывод в консоль время выполнения скрипта
