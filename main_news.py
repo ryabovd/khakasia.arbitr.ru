@@ -129,10 +129,17 @@ def save_news(news, CSV):
             writer.writerow( [news_dict['news_date'], news_dict['news_title'], news_dict['news_link'], news_dict['news_text']] )
 
 def text_for_send(news):
+    '''That func prepared text of message and add footer with add_footer func'''
     text = ''
     for news_dict in news:
         text += news_dict['news_date'] + '\n' + news_dict['news_title'] + '\n' + news_dict['news_link'] + '\n' + news_dict['news_text'] + '\n'
+    text += add_footer()
     return text
+
+def add_footer():
+    '''In that func contains text of message's footer.'''
+    footer = '\nОТКАЗАТЬСЯ от получения рассылок ▼ \n\nmailto:secretary@you-right.info?subject=UNSUBSCRIBE&body=Не%20присылайте%20больше%20писем'
+    return footer
 
 def get_adress_list(settings):
     adresses = settings['adress_list'].items()
