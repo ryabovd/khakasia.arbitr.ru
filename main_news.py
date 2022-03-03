@@ -138,6 +138,7 @@ def get_adress_list(settings):
     adresses = settings['adress_list'].items()
     adress_list = []
     for k, v in adresses:
+#Need some fix here. What is 'k'?
         adress_list.append(v)
     return adress_list
 
