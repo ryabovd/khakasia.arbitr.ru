@@ -1,10 +1,11 @@
 # arbitr.ru
 
-readme v 1.4
+readme v 1.5
 
 main_news.py
 This script collects news headlines from the website of the Arbitration Court of the Republic of Khakassia, Arbitration Court of the Republic of Tyva,
 Arbitration Court of the Krasnoyarsk region completes them with the full news text and a direct link to the news page and sends them to the specified e-mail address.
+Letters are sent at intervals of 2+ seconds so as not to overload the mail server.
 
 The files should be placed in the working directory:
 
