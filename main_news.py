@@ -13,13 +13,32 @@ import time
 def main():
     CSV = 'news_arbitr.ru.csv'
     URLS = [
-        'https://khakasia.arbitr.ru/?theme=courts_cecutient',
-        'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
-        'https://tyva.arbitr.ru/?theme=courts_cecutient'
+        'https://khakasia.arbitr.ru/?theme=courts_cecutient'
         ]
+
+    """,
+        'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
+        'https://tyva.arbitr.ru/?theme=courts_cecutient' 
+    """
+
     HEADERS = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-RU,en;q=0.9,ru-RU;q=0.8,ru;q=0.7,en-GB;q=0.6,en-US;q=0.5',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive',
+        'Cookie': 'CUID=1bd29941-f819-4add-8cdc-196a51016357:H7SR4OhNgoYjlt68Qswpyg==; _ga=GA1.2.591100857.1617104623; tmr_lvid=4bb6f3a8b5c8abd536977934ac7412c1; tmr_lvidTS=1617104623140; _ym_uid=1617104623339866984; has_js=1; __utmc=24020832; is_agree_privacy_policy=true; __utmc=14300007; _ym_d=1649070092; .ASPXAUTH=CDB1380ECEED8CC69F97BBE9999EF35529B20465B5619F4C782935FC86AE952315CC157CF5088AD3069F3783667906B7A1D5AC69F5AAFC0959BEA60C78EAA2D50A0F1CC1064467C5DF7F54C9BBA7060849885773AF8E25DE91D5410690CF9474486DBF0D; pr_fp=54a7d574492b3fcfdb5da8e2382cdd9ec1f702dfb801e8d1b870ba18bdf0f3cc; rcid=10deba7b-dc3b-47c0-899e-df1091c5597c; KadLVCards=А33-37639/2020; tmr_reqNum=19; SESS46fae3028d5b7aae30c760ca4bdc7a2b=th8dlvjpokg803h5p73ts8qes7; __utma=24020832.591100857.1617104623.1649302412.1649302412.1; __utmz=24020832.1649302412.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ym_isad=1; __utmb=24020832.2.10.1649302412; session-cookie=16e381b11ad0da094a413d02beb261f55b707e971825d5ea4145144789b65a0dc706fadd5705a13b62b00203493811fb; _dd_s=logs=1&id=8e962e33-81a4-404a-87c3-8bfc89fdf536&created=1649304047744&expire=1649306033034',
+        'Host': 'khakasia.arbitr.ru',
+        'Referer': 'https://khakasia.arbitr.ru/',
+        'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1'
         }
     
     settings = get_settings()
@@ -30,7 +49,9 @@ def main():
     
     for URL in URLS:
         html = get_html(URL, HEADERS)
+        print(html)
         soup = get_soup(html.text)
+        print(soup)
         court = get_court(soup)
         print('\n' + court)
         print('\nПолучаем новости с {}\n'.format(last_date))
@@ -72,13 +93,16 @@ def get_html(url, HEADERS):
 
 def get_soup(request_url):
     soup = BeautifulSoup(request_url, 'html.parser')
+    print(soup)
     return soup
 
 def get_court(soup):
-    title = soup.find('title').get_text().strip()
-    court_match = re.search(r"(А[ a-яА-Я]+)$", title)
-    court = court_match.group(0)
-    return court
+    #print(soup)
+    title = soup.find('h1')
+    #print('TITLE', title)
+#    court_match = re.search(r"(А[ a-яА-Я]+)$", title)
+#    court = court_match.group(0)
+    return 'title'
 
 def get_current_date(soup):
     current_date = soup.find('h6', class_="b-news-date").get_text().strip()

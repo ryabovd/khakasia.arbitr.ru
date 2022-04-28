@@ -13,4 +13,4 @@ def mailing(mailing_text_file):
     send_notification(text, subject, adress_list)
 
 
-mailing('mailing_unsubscribe.txt')
+mailing('offer.txt')
