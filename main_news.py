@@ -1,4 +1,7 @@
+from urllib.request import urlopen
+from urllib.error import HTTPError
 from bs4 import BeautifulSoup
+"""
 import requests
 import certifi
 import csv
@@ -8,18 +11,40 @@ import datetime
 import sys
 import re
 import time
+"""
+
+def getTitle(url):
+    try:
+        html = urlopen(url)
+    except HTTPError as e:
+        return None
+    try:
+        bs = BeautifulSoup(html.read(), 'html.parser')
+        title = bs.body.h1
+    except AttributeError as e:
+        return None
+    return title
 
 
+title = getTitle('http://www.pythonscraping.com/pages/page1.html')
+if title == None:
+    print('Title could not be found')
+else:
+    print(title)
+
+
+
+"""
 def main():
     CSV = 'news_arbitr.ru.csv'
     URLS = [
         'https://khakasia.arbitr.ru/?theme=courts_cecutient'
         ]
 
-    """,
-        'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
-        'https://tyva.arbitr.ru/?theme=courts_cecutient' 
-    """
+
+ #       ,'https://krasnoyarsk.arbitr.ru/?theme=courts_cecutient', 
+ #       'https://tyva.arbitr.ru/?theme=courts_cecutient' 
+
 
     HEADERS = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -201,3 +226,4 @@ if __name__ == "__main__":
 # +Переписать скрипт на __main__
 # +Написать функцию проверки даты последней новости, полученной при предыдущей проверке, и отбирающей только новые новости
 # +Написать функцию отправки новостей по электронной почте
+"""
