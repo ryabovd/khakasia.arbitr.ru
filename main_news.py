@@ -20,13 +20,14 @@ def getTitle(url):
         return None
     try:
         bs = BeautifulSoup(html.read(), 'html.parser')
-        title = bs.body.h1
+        title = bs.body.h2
     except AttributeError as e:
         return None
     return title
 
 
-title = getTitle('http://www.pythonscraping.com/pages/page1.html')
+title = getTitle('https://khakasia.arbitr.ru/')
+# http://www.pythonscraping.com/pages/page1.html
 if title == None:
     print('Title could not be found')
 else:

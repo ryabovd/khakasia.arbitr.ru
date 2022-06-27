@@ -1,5 +1,10 @@
 # arbitr.ru
 
+readme v 2.0
+This script does not work because the structure and markup of arbitration pages has been changed since March 2022.
+:(
+In the future, perhaps the script will be rewritten to accommodate the new markup.
+
 readme v 1.5
 
 main_news.py
