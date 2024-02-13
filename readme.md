@@ -1,5 +1,8 @@
 # arbitr.ru
 
+Проект закрыт, так как после взлома сайтов арбитражных судов, была изменена структура страниц.
+Но, за несколько месяцев работы, этот проект показал, что я кое-что могу сделать самостоятельно.
+
 readme v 2.0
 This script does not work because the structure and markup of arbitration pages has been changed since March 2022.
 :(
